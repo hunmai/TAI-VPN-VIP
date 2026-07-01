@@ -247,8 +247,8 @@
         }
 
         .config-box textarea {
-            height: 140px !important; /* ปรับให้ขยายความสูงขึ้นเล็กน้อยเพื่อให้อ่าน JSON สะดวกขึ้น */
-            resize: vertical; /* อนุญาตให้ขยายแนวตั้งได้หากข้อมูลยาว */
+            height: 140px !important;
+            resize: vertical;
         }
 
         button {
@@ -282,8 +282,10 @@
         .btn-config { background: #ffb800 !important; color: #000000 !important; text-shadow: none !important; }
         .btn-config:hover { background: #e6a600 !important; }
 
+        /* ปรับแต่งจุดนี้: เปลี่ยนจาก margin-top เป็น margin-bottom เพื่อไม่ให้เบียดกับกล่องด้านล่าง */
         #status {
-            margin-top: 15px !important;
+            margin-top: 0px !important;
+            margin-bottom: 15px !important;
             padding: 12px !important;
             border: 3px solid #000000 !important;
             border-radius: 10px !important;
@@ -304,6 +306,9 @@
     <div class="container">
         <h2>TAI VPN VIP</h2>
         <p class="subtitle">Manga Update Panel ⚡</p>
+
+        <!-- ย้ายตำแหน่ง #status มาไว้ตรงนี้ (ด้านบนสุดของส่วนเนื้อหา) -->
+        <div id="status"></div>
 
         <!-- ====== ส่วนที่ 1: ตรวจสอบ Token ====== -->
         <div id="authSection" class="config-box">
@@ -332,15 +337,13 @@
                 <button class="btn-config" onclick="uploadSingleFile('Key.json', 'keyJsonContent')">⚙️ Update Key.json</button>
             </div>
         </div>
-
-        <div id="status"></div>
     </div>
 
     <!-- ====== JavaScript การทำงานหลัก ====== -->
     <script>
         const CONFIG = {
-            repo: "hunmai/TAI-VPN-VIP", // อัปเดตชื่อคลังตามรูปภาพของคุณ
-            folder: "" // หากไฟล์อยู่ที่หน้าแรก (Root) ไม่ต้องระบุชื่อโฟลเดอร์
+            repo: "hunmai/TAI-VPN-VIP", 
+            folder: "" 
         };
 
         function getWebToken() {
@@ -386,7 +389,6 @@
                     const fileData = await response.json();
                     const decodedContent = decodeURIComponent(escape(atob(fileData.content)));
                     try {
-                        // จัดฟอร์แมต JSON ให้สวยงามอ่านง่ายขึ้นตอนโหลดมาแสดง
                         const formattedJson = JSON.stringify(JSON.parse(decodedContent), null, 4);
                         document.getElementById('configJsonContent').value = formattedJson;
                     } catch(e) {
@@ -444,14 +446,12 @@
                 return;
             }
 
-            // --- ส่วนสำหรับตรวจสอบความเป็น JSON ---
             try {
                 JSON.parse(content);
             } catch (jsonErr) {
                 showStatus(`❌ ข้อมูลในช่อง ${targetFileName} ไม่ใช่รูปแบบ JSON ที่ถูกต้อง! กรุณาตรวจสอบวงเล็บ ปีกกา หรือเครื่องหมายคำพูด (")`, 'error');
                 return;
             }
-            // ------------------------------------
 
             const path = getFilePath(targetFileName);
             showStatus(`กำลังบันทึกข้อมูลไปยัง ${path}...`, 'info');
