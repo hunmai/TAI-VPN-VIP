@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TAI VPN VIP</title>
+
+    <!-- Google Fonts สำหรับฟอนต์แนวโมเดิร์นน่ารักๆ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght=400;600;800&family=JetBrains+Mono:wght=500;700&display=swap" rel="stylesheet">
+
+    <!-- ====== 原有样式 (未修改) ====== -->
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 550px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        p.subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .config-box {
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .config-box h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 16px;
+            color: #0366d6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 13px;
+            resize: vertical;
+            height: 140px;
+            font-family: monospace;
+            background: white;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: background 0.2s;
+        }
+        .btn-api {
+            background-color: #2ea44f;
+        }
+        .btn-api:hover {
+            background-color: #2c974b;
+        }
+        .btn-config {
+            background-color: #24292e;
+        }
+        .btn-config:hover {
+            background-color: #444;
+        }
+        #status {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            display: none;
+            text-align: center;
+            font-weight: bold;
+        }
+        .success {
+            background-color: #dcffe4;
+            color: #1a7f37;
+            border: 1px solid #1a7f37;
+        }
+        .error {
+            background-color: #ffebe9;
+            color: #cf222e;
+            border: 1px solid #cf222e;
+        }
+        .info {
+            background-color: #ddf4ff;
+            color: #0969da;
+            border: 1px solid #0969da;
+        }
+    </style>
+
+    <!-- ====== ✨ การตกแต่งแบบฉบับการ์ตูน/อนิเมะสุดเท่ (Manga Pop Art Style) ====== -->
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Kanit', 'Segoe UI', sans-serif !important;
+            background-color: #1e1b4b !important;
+            background-image: 
+                radial-gradient(#312e81 15%, transparent 16%),
+                radial-gradient(#312e81 15%, transparent 16%);
+            background-size: 24px 24px;
+            background-position: 0 0, 12px 12px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 10px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            background: #ffffff !important;
+            border: 4px solid #000000 !important;
+            border-radius: 20px !important;
+            box-shadow: 8px 8px 0px #000000 !important;
+            padding: 25px 15px !important;
+            width: 100% !important;
+            max-width: 500px !important;
+            transform: none !important;
+            transition: transform 0.3s ease;
+        }
+
+        .container h2 {
+            font-family: 'Kanit', sans-serif !important;
+            font-weight: 800 !important;
+            font-size: 24px !important;
+            color: #ffffff !important;
+            text-align: center;
+            background: #ff007f;
+            padding: 8px 16px;
+            border: 3px solid #000000;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 0 auto 10px auto !important;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%) rotate(-1deg);
+            box-shadow: 3px 3px 0px #000000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            -webkit-text-fill-color: initial !important;
+            white-space: nowrap;
+        }
+
+        .container p.subtitle {
+            color: #4b5563 !important;
+            font-weight: 600 !important;
+            font-size: 13px !important;
+            margin-bottom: 20px !important;
+            text-align: center;
+            background: #fde047;
+            display: table;
+            margin: 0 auto 20px auto !important;
+            padding: 2px 8px;
+            border: 2.5px solid #000;
+            border-radius: 6px;
+            transform: rotate(1deg);
+        }
+
+        .config-box {
+            background: #f8fafc !important;
+            border: 3px solid #000000 !important;
+            border-radius: 14px !important;
+            padding: 15px !important;
+            margin-bottom: 18px !important;
+            box-shadow: 4px 4px 0px #000000 !important;
+            position: relative;
+        }
+
+        .config-box label {
+            color: #000000 !important;
+            font-weight: 800 !important;
+            font-size: 14px !important;
+            margin-bottom: 6px !important;
+            display: flex;
+            align-items: center;
+        }
+        
+        .config-box label::before {
+            content: '⚡';
+            margin-right: 4px;
+            color: #fde047;
+            -webkit-text-stroke: 1px #000;
+        }
+
+        .config-box input[type="password"], 
+        .config-box textarea {
+            width: 100% !important;
+            background: #ffffff !important;
+            border: 3px solid #000000 !important;
+            border-radius: 10px !important;
+            color: #1e1b4b !important;
+            font-family: 'JetBrains Mono', monospace !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            padding: 10px !important;
+            box-shadow: inset 2px 2px 0px rgba(0,0,0,0.05);
+        }
+
+        .config-box textarea {
+            height: 140px !important; /* ปรับให้ขยายความสูงขึ้นเล็กน้อยเพื่อให้อ่าน JSON สะดวกขึ้น */
+            resize: vertical; /* อนุญาตให้ขยายแนวตั้งได้หากข้อมูลยาว */
+        }
+
+        button {
+            width: 100% !important;
+            padding: 12px 15px !important;
+            font-family: 'Kanit', sans-serif !important;
+            font-size: 15px !important;
+            font-weight: 800 !important;
+            color: #ffffff !important;
+            border: 3px solid #000000 !important;
+            border-radius: 10px !important;
+            cursor: pointer;
+            margin-top: 8px !important;
+            box-shadow: 3px 3px 0px #000000 !important;
+            position: relative;
+            top: 0;
+            left: 0;
+            text-shadow: 1px 1px 0px #000;
+        }
+
+        button:active {
+            top: 3px !important;
+            left: 3px !important;
+            box-shadow: 0px 0px 0px #000000 !important;
+        }
+
+        .btn-auth { background: #6366f1 !important; }
+        .btn-auth:hover { background: #4f46e5 !important; }
+        .btn-api { background: #00ffaa !important; color: #000000 !important; text-shadow: none !important; }
+        .btn-api:hover { background: #00e699 !important; }
+        .btn-config { background: #ffb800 !important; color: #000000 !important; text-shadow: none !important; }
+        .btn-config:hover { background: #e6a600 !important; }
+
+        #status {
+            margin-top: 15px !important;
+            padding: 12px !important;
+            border: 3px solid #000000 !important;
+            border-radius: 10px !important;
+            font-size: 14px !important;
+            font-weight: 800 !important;
+            box-shadow: 3px 3px 0px #000000 !important;
+        }
+
+        .bg-overlay, .bg-glow, .star-deco, .container .shimmer {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="container">
+        <h2>TAI VPN VIP</h2>
+        <p class="subtitle">Manga Update Panel ⚡</p>
+
+        <!-- ====== ส่วนที่ 1: ตรวจสอบ Token ====== -->
+        <div id="authSection" class="config-box">
+            <div class="form-group">
+                <label for="githubToken">GitHub Personal Access Token</label>
+                <input type="password" id="githubToken" placeholder="วาง ghp_... ของคุณเพื่อยืนยันตัวตน" value="" />
+            </div>
+            <button class="btn-auth" onclick="verifyAndLoadDashboard()">เข้าสู่ระบบจัดการไฟล์ ➔</button>
+        </div>
+
+        <!-- ====== ส่วนที่ 2: หน้าจอ Dashboard แก้ไขเนื้อหาไฟล์ ====== -->
+        <div id="mainDashboard" style="display: none;">
+            <div class="config-box">
+                <div class="form-group">
+                    <label>เนื้อหาไฟล์ Config (Config.json)</label>
+                    <textarea id="configJsonContent" placeholder="กำลังดึงข้อมูลล่าสุดจาก GitHub..."></textarea>
+                </div>
+                <button class="btn-api" onclick="uploadSingleFile('Config.json', 'configJsonContent')">🔥 Update Config.json</button>
+            </div>
+
+            <div class="config-box">
+                <div class="form-group">
+                    <label>เนื้อหาไฟล์ Key (Key.json)</label>
+                    <textarea id="keyJsonContent" placeholder="กำลังดึงข้อมูลล่าสุดจาก GitHub..."></textarea>
+                </div>
+                <button class="btn-config" onclick="uploadSingleFile('Key.json', 'keyJsonContent')">⚙️ Update Key.json</button>
+            </div>
+        </div>
+
+        <div id="status"></div>
+    </div>
+
+    <!-- ====== JavaScript การทำงานหลัก ====== -->
+    <script>
+        const CONFIG = {
+            repo: "hunmai/TAI-VPN-VIP", // อัปเดตชื่อคลังตามรูปภาพของคุณ
+            folder: "" // หากไฟล์อยู่ที่หน้าแรก (Root) ไม่ต้องระบุชื่อโฟลเดอร์
+        };
+
+        function getWebToken() {
+            return document.getElementById('githubToken').value.trim();
+        }
+
+        function getFilePath(fileName) {
+            return CONFIG.folder ? `${CONFIG.folder}/${fileName}` : fileName;
+        }
+
+        async function verifyAndLoadDashboard() {
+            const token = getWebToken();
+            if (!token) {
+                showStatus('⚠️ กรุณากรอก GitHub Token ก่อนครับ', 'error');
+                return;
+            }
+
+            showStatus('กำลังตรวจสอบสิทธิ์การเข้าถึงคลังข้อมูล...', 'info');
+
+            const path = getFilePath('Config.json');
+            const url = `https://api.github.com/repos/${CONFIG.repo}/contents/${path}`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (response.status === 401 || response.status === 403) {
+                    showStatus('❌ Token ไม่ถูกต้อง หรือไม่มีสิทธิ์เข้าถึงคลังนี้', 'error');
+                    return;
+                }
+
+                showStatus('🔒 ยืนยันสิทธิ์สำเร็จ! กำลังโหลดเนื้อหาไฟล์...', 'success');
+                
+                document.getElementById('authSection').style.display = 'none';
+                document.getElementById('mainDashboard').style.display = 'block';
+
+                if (response.ok) {
+                    const fileData = await response.json();
+                    const decodedContent = decodeURIComponent(escape(atob(fileData.content)));
+                    try {
+                        // จัดฟอร์แมต JSON ให้สวยงามอ่านง่ายขึ้นตอนโหลดมาแสดง
+                        const formattedJson = JSON.stringify(JSON.parse(decodedContent), null, 4);
+                        document.getElementById('configJsonContent').value = formattedJson;
+                    } catch(e) {
+                        document.getElementById('configJsonContent').value = decodedContent;
+                    }
+                } else {
+                    document.getElementById('configJsonContent').placeholder = `ไม่พบไฟล์เดิมในระบบ (หากกดอัปเดตจะเป็นการสร้างไฟล์ใหม่)`;
+                }
+
+                fetchCurrentFile('Key.json', 'keyJsonContent');
+
+            } catch (error) {
+                showStatus(`เกิดข้อผิดพลาดในการเชื่อมต่อ: ${error.message}`, 'error');
+            }
+        }
+
+        async function fetchCurrentFile(targetFileName, textareaId) {
+            const token = getWebToken();
+            const path = getFilePath(targetFileName);
+            const url = `https://api.github.com/repos/${CONFIG.repo}/contents/${path}`;
+            const textarea = document.getElementById(textareaId);
+
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (response.ok) {
+                    const fileData = await response.json();
+                    const decodedContent = decodeURIComponent(escape(atob(fileData.content)));
+                    try {
+                        const formattedJson = JSON.stringify(JSON.parse(decodedContent), null, 4);
+                        textarea.value = formattedJson;
+                    } catch(e) {
+                        textarea.value = decodedContent;
+                    }
+                } else {
+                    textarea.placeholder = `ไม่พบไฟล์เดิมในระบบ (หากกดอัปเดตจะเป็นการสร้างไฟล์ใหม่)`;
+                }
+            } catch (error) {
+                textarea.placeholder = `เกิดข้อผิดพลาดในการดึงข้อมูล: ${error.message}`;
+            }
+        }
+
+        async function uploadSingleFile(targetFileName, textareaId) {
+            const token = getWebToken();
+            const content = document.getElementById(textareaId).value;
+
+            if (!content.trim()) {
+                showStatus(`กรุณากรอกข้อมูลในช่องของ ${targetFileName} ก่อนครับ`, 'error');
+                return;
+            }
+
+            // --- ส่วนสำหรับตรวจสอบความเป็น JSON ---
+            try {
+                JSON.parse(content);
+            } catch (jsonErr) {
+                showStatus(`❌ ข้อมูลในช่อง ${targetFileName} ไม่ใช่รูปแบบ JSON ที่ถูกต้อง! กรุณาตรวจสอบวงเล็บ ปีกกา หรือเครื่องหมายคำพูด (")`, 'error');
+                return;
+            }
+            // ------------------------------------
+
+            const path = getFilePath(targetFileName);
+            showStatus(`กำลังบันทึกข้อมูลไปยัง ${path}...`, 'info');
+
+            const url = `https://api.github.com/repos/${CONFIG.repo}/contents/${path}`;
+            const base64Content = btoa(unescape(encodeURIComponent(content)));
+            let sha = null;
+
+            try {
+                const checkResponse = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                if (checkResponse.ok) {
+                    const fileData = await checkResponse.json();
+                    sha = fileData.sha;
+                }
+            } catch (err) {}
+
+            const bodyData = {
+                message: `Live-edited ${targetFileName} via Web Panel at ${new Date().toLocaleString('th-TH')}`,
+                content: base64Content
+            };
+
+            if (sha) {
+                bodyData.sha = sha;
+            }
+
+            try {
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify(bodyData)
+                });
+
+                if (response.ok) {
+                    showStatus(`🎉 อัปเดตไฟล์ "${targetFileName}" สำเร็จเรียบร้อย!`, 'success');
+                } else {
+                    const errorData = await response.json();
+                    showStatus(`เกิดข้อผิดพลาดจาก GitHub: ${errorData.message}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`เชื่อมต่อล้มเหลว: ${error.message}`, 'error');
+            }
+        }
+
+        function showStatus(text, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerText = text;
+            statusDiv.style.display = 'block';
+            statusDiv.className = type;
+        }
+    </script>
+
+    <!-- ====== Background Anime Effect ====== -->
+    <script>
+        (function() {
+            'use strict';
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            let w, h, particles = [];
+            const COUNT = 30; 
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            class AnimeStar {
+                constructor() { this.reset(); }
+                reset() {
+                    this.x = Math.random() * w;
+                    this.y = Math.random() * h;
+                    this.size = Math.random() * 5 + 3;
+                    this.speed = Math.random() * 0.6 + 0.2;
+                    this.angle = Math.random() * Math.PI * 2;
+                    this.spinSpeed = (Math.random() - 0.5) * 0.02;
+                    this.opacity = Math.random() * 0.4 + 0.2;
+                }
+                update() {
+                    this.y -= this.speed;
+                    this.angle += this.spinSpeed;
+                    if (this.y < -20) { this.reset(); this.y = h + 20; }
+                }
+                draw() {
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.rotate(this.angle);
+                    ctx.fillStyle = `rgba(253, 224, 71, ${this.opacity})`;
+                    ctx.beginPath();
+                    for(let i=0; i<4; i++) {
+                        ctx.lineTo(0, -this.size);
+                        ctx.lineTo(this.size * 0.3, -this.size * 0.3);
+                        ctx.rotate(Math.PI / 2);
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            for (let i = 0; i < COUNT; i++) particles.push(new AnimeStar());
+
+            function animate() {
+                ctx.clearRect(0, 0, w, h);
+                for (const p of particles) {
+                    p.update();
+                    p.draw();
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+    </script>
+</body>
+</html>
