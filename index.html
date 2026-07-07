@@ -5,20 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TAI VPN VIP</title>
 
-    <!-- Google Fonts สำหรับฟอนต์แนวโมเดิร์นน่ารักๆ -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght=400;600;800&family=JetBrains+Mono:wght=500;700&display=swap" rel="stylesheet">
 
-    <!-- ====== 原有样式 (未修改) ====== -->
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f6f9;
             margin: 0;
             padding: 20px;
-            display: flex;
-            justify-content: center;
         }
         .container {
             background: white;
@@ -27,6 +23,7 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
             width: 100%;
             max-width: 550px;
+            margin: 0 auto;
         }
         h2 {
             text-align: center;
@@ -61,17 +58,19 @@
             font-weight: 600;
             color: #555;
         }
-        textarea {
+        textarea, input[type="text"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 6px;
             box-sizing: border-box;
             font-size: 13px;
+            background: white;
+        }
+        textarea {
             resize: vertical;
             height: 140px;
             font-family: monospace;
-            background: white;
         }
         button {
             width: 100%;
@@ -122,7 +121,6 @@
         }
     </style>
 
-    <!-- ====== ✨ การตกแต่งแบบฉบับการ์ตูน/อนิเมะสุดเท่ (Manga Pop Art Style) ====== -->
     <style>
         * {
             box-sizing: border-box;
@@ -137,10 +135,7 @@
             background-size: 24px 24px;
             background-position: 0 0, 12px 12px;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px 10px;
+            padding: 40px 10px !important; /* เพิ่ม Padding บน-ล่างเพื่อให้ขอบไม่ติดหน้าจอเกินไป */
             overflow-x: hidden;
             position: relative;
         }
@@ -165,6 +160,7 @@
             padding: 25px 15px !important;
             width: 100% !important;
             max-width: 500px !important;
+            margin: 0 auto !important; /* จัดหน้าให้อยู่กึ่งกลางแนวตั้งและนอนอย่างสมดุลเมื่อเนื้อหายาว */
             transform: none !important;
             transition: transform 0.3s ease;
         }
@@ -233,20 +229,22 @@
         }
 
         .config-box input[type="password"], 
+        .config-box input[type="text"], 
         .config-box textarea {
             width: 100% !important;
             background: #ffffff !important;
             border: 3px solid #000000 !important;
             border-radius: 10px !important;
             color: #1e1b4b !important;
-            font-family: 'JetBrains Mono', monospace !important;
             font-size: 13px !important;
             font-weight: 600 !important;
             padding: 10px !important;
             box-shadow: inset 2px 2px 0px rgba(0,0,0,0.05);
+            margin-bottom: 10px;
         }
 
         .config-box textarea {
+            font-family: 'JetBrains Mono', monospace !important;
             height: 140px !important;
             resize: vertical;
         }
@@ -281,8 +279,9 @@
         .btn-api:hover { background: #00e699 !important; }
         .btn-config { background: #ffb800 !important; color: #000000 !important; text-shadow: none !important; }
         .btn-config:hover { background: #e6a600 !important; }
+        .btn-add { background: #ff4757 !important; color: #ffffff !important; }
+        .btn-add:hover { background: #ff2a3b !important; }
 
-        /* ปรับแต่งจุดนี้: เปลี่ยนจาก margin-top เป็น margin-bottom เพื่อไม่ให้เบียดกับกล่องด้านล่าง */
         #status {
             margin-top: 0px !important;
             margin-bottom: 15px !important;
@@ -307,10 +306,8 @@
         <h2>TAI VPN VIP</h2>
         <p class="subtitle">Manga Update Panel ⚡</p>
 
-        <!-- ย้ายตำแหน่ง #status มาไว้ตรงนี้ (ด้านบนสุดของส่วนเนื้อหา) -->
         <div id="status"></div>
 
-        <!-- ====== ส่วนที่ 1: ตรวจสอบ Token ====== -->
         <div id="authSection" class="config-box">
             <div class="form-group">
                 <label for="githubToken">GitHub Personal Access Token</label>
@@ -319,8 +316,26 @@
             <button class="btn-auth" onclick="verifyAndLoadDashboard()">เข้าสู่ระบบจัดการไฟล์ ➔</button>
         </div>
 
-        <!-- ====== ส่วนที่ 2: หน้าจอ Dashboard แก้ไขเนื้อหาไฟล์ ====== -->
         <div id="mainDashboard" style="display: none;">
+            
+            <div class="config-box" style="border: 3px solid #ff4757 !important; background: #fff5f5 !important;">
+                <h3 style="color: #ff4757; font-weight: 800; margin-top:0;">➕ เพิ่มผู้ใช้งานใหม่ (ลงใน Key.json)</h3>
+                
+                <label>Name (ชื่อผู้ใช้)</label>
+                <input type="text" id="new_name" placeholder="ตัวอย่าง: แม่, Deang, Kham" />
+                
+                <label>Key (รหัสผ่าน/คีย์)</label>
+                <input type="text" id="new_key" placeholder="ตัวอย่าง: fda4a7ce42dddc03" />
+                
+                <label>Valid (จำนวนวัน)</label>
+                <input type="text" id="new_valid" value="365" placeholder="ตัวอย่าง: 365" />
+                
+                <label>Expiration (วันหมดอายุ)</label>
+                <input type="text" id="new_expiration" placeholder="ตัวอย่าง: 17/12/2026" />
+                
+                <button class="btn-add" onclick="addNewKeyToTextarea()">✨ เพิ่มข้อมูลลงในกล่องด้านล่าง</button>
+            </div>
+
             <div class="config-box">
                 <div class="form-group">
                     <label>เนื้อหาไฟล์ Config (Config.json)</label>
@@ -339,7 +354,6 @@
         </div>
     </div>
 
-    <!-- ====== JavaScript การทำงานหลัก ====== -->
     <script>
         const CONFIG = {
             repo: "hunmai/TAI-VPN-VIP", 
@@ -352,6 +366,50 @@
 
         function getFilePath(fileName) {
             return CONFIG.folder ? `${CONFIG.folder}/${fileName}` : fileName;
+        }
+
+        function addNewKeyToTextarea() {
+            const name = document.getElementById('new_name').value.trim();
+            const key = document.getElementById('new_key').value.trim();
+            const valid = document.getElementById('new_valid').value.trim();
+            const expiration = document.getElementById('new_expiration').value.trim();
+            const textarea = document.getElementById('keyJsonContent');
+
+            if (!name || !key || !valid || !expiration) {
+                showStatus('⚠️ กรุณากรอกข้อมูลฟอร์มผู้ใช้ใหม่ให้ครบทุกช่องครับ', 'error');
+                return;
+            }
+
+            try {
+                let currentData = [];
+                if (textarea.value.trim()) {
+                    currentData = JSON.parse(textarea.value);
+                }
+                
+                if (!Array.isArray(currentData)) {
+                    showStatus('❌ โครงสร้างข้อมูลในกล่อง Key.json เดิมไม่ใช่ Array ([ ... ]) ไม่สามารถเพิ่มได้', 'error');
+                    return;
+                }
+
+                const newItem = {
+                    "Name": name,
+                    "Key": key,
+                    "Valid": valid,
+                    "Expiration": expiration
+                };
+
+                currentData.push(newItem);
+
+                textarea.value = JSON.stringify(currentData, null, 4);
+                showStatus('✅ เพิ่มข้อมูลใหม่ลงในกล่องสำเร็จแล้ว! อย่าลืมกดปุ่ม "Update Key.json" ด้านล่างเพื่อบันทึกไป GitHub', 'success');
+
+                document.getElementById('new_name').value = '';
+                document.getElementById('new_key').value = '';
+                document.getElementById('new_expiration').value = '';
+
+            } catch (e) {
+                showStatus('❌ ไม่สามารถดึงข้อมูลเดิมจากกล่องมาคำนวณได้ เนื่องจาก JSON ด้านล่างอาจเสียหายหรือพิมพ์ค้างไว้อยู่', 'error');
+            }
         }
 
         async function verifyAndLoadDashboard() {
@@ -395,7 +453,7 @@
                         document.getElementById('configJsonContent').value = decodedContent;
                     }
                 } else {
-                    document.getElementById('configJsonContent').placeholder = `ไม่พบไฟล์เดิมในระบบ (หากกดอัปเดตจะเป็นการสร้างไฟล์ใหม่)`;
+                    document.getElementById('configJsonContent').placeholder = `ไม่พบไฟล์เดิมในระบบ`;
                 }
 
                 fetchCurrentFile('Key.json', 'keyJsonContent');
@@ -430,7 +488,7 @@
                         textarea.value = decodedContent;
                     }
                 } else {
-                    textarea.placeholder = `ไม่พบไฟล์เดิมในระบบ (หากกดอัปเดตจะเป็นการสร้างไฟล์ใหม่)`;
+                    textarea.placeholder = `ไม่พบไฟล์เดิมในระบบ`;
                 }
             } catch (error) {
                 textarea.placeholder = `เกิดข้อผิดพลาดในการดึงข้อมูล: ${error.message}`;
@@ -475,7 +533,7 @@
             } catch (err) {}
 
             const bodyData = {
-                message: `Live-edited ${targetFileName} via Web Panel at ${new Date().toLocaleString('th-TH')}`,
+                message: `Updated ${targetFileName} via Manga Web Panel`,
                 content: base64Content
             };
 
@@ -495,7 +553,7 @@
                 });
 
                 if (response.ok) {
-                    showStatus(`🎉 อัปเดตไฟล์ "${targetFileName}" สำเร็จเรียบร้อย!`, 'success');
+                    showStatus(`🎉 อัปเดตไฟล์ "${targetFileName}" สำเร็จเรียบร้อย! ข้อมูลซิงค์ไป GitHub แล้ว`, 'success');
                 } else {
                     const errorData = await response.json();
                     showStatus(`เกิดข้อผิดพลาดจาก GitHub: ${errorData.message}`, 'error');
@@ -513,7 +571,6 @@
         }
     </script>
 
-    <!-- ====== Background Anime Effect ====== -->
     <script>
         (function() {
             'use strict';
